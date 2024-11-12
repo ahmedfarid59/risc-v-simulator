@@ -2,6 +2,12 @@ import os
 from constents import *
 import re
 
+labels={} #dictianary holds the labels and their indexes
+instructionsList=[]
+vars={}
+memory=bytearray(1048576)
+pointer=0
+
 #fileName=input("enter the risc-v file name")
 #while not  os.path.exists(fileName):
 	#print("file do not exist!")
@@ -10,32 +16,32 @@ import re
 file=open("test1.s")#openning the file
 code=file.read().lower()#getting the content of the file and converting it to lower case
 file.close()#closing the file
+#removing comments
+code=re.sub(r"\s*#.*",'',code)
+#removing empty lines and those who are just set of spaces and the trilling extra spaces
+code=re.sub(r"\s*(\n\s*)+","\n",code)
 
-code=re.sub(r"\s*#.*",'',code)#removing comments
+code=re.sub(r"\s*\(\s*",",",code)#converting ( to , for standadization)
+code=re.sub(r"\s*\)","",code)#removing )
 code=re.sub(r"\s*,\s*",",",code)
-code=re.sub(r"\s*(\n\s*)+","\n",code)#removing empty lines and those who are just set of spaces and the trilling extra spaces
+
 code=re.sub(r"\s{2,}",' ',code)#removing extra spaces between words
 code=code.upper()
 
-textSection= re.search(r"\.TEXT\s*([-\w\s,:()]+)\.?",code).group().splitlines()
-labels={} #dictianary holds the labels and their indexes
-instructions=[]
+textSection= re.search(r"\.TEXT\s*([-\w\s,:()]+)\.?",code).group(1).splitlines()
 
 for i, inst in enumerate(textSection):
-	if inst.endswith(":") :
-		labels[inst]=i
-	else:
-		if inst in supportedInstructions:
-			tokens=re.split(r"(?:\s|,)+",inst)
-			instructions.append(tokens)
-		elif inst in holding:
-			instructions.append(inst)
+	tokens=re.split(r"(?:\s|,)+",inst)
+	if tokens[0].endswith(":") :
+		labels[inst[:-1]]=i
+		instructionsList.append(tokens)
+	elif tokens[0] in supportedInstructions:
+		instructionsList.append(tokens)
+	elif inst in holding:
+		instructionsList.append(inst)
 
 dataSection= re.search(r'\.DATA\s*([^\s]+(?:\s+[^\s]+)*)\s*(?=\n\s*\.TEXT)', code).group(1)
 initialData=re.findall(r'(\w+)\s*:\s*\.(WORD|ASCII|ASCIZ|HALF|BYTE|DWORD)\s*([^\s]+)',dataSection)
-vars={}
-memory=bytearray(1048576)
-pointer=0
 for d in initialData:
 	if d[1] =="WORD":
 		value=d[2].split(',')
@@ -50,7 +56,7 @@ for d in initialData:
 		memory[pointer:pointer+2]=int(d[2]).to_bytes(2,byteorder='big')
 		pointer+=2
 	elif d[1] == "BYTE":
-		memory[pointer:pointer+1] = int(d[2]).to_bytes(1,byteorder='big')
+		memory[pointer] = int(d[2]).to_bytes(1,byteorder='big')
 		pointer+=1
 	elif d[1] == "DWORD":
 		memory[pointer:pointer+8]=int(d[2]).to_bytes(8,byteorder='big')
@@ -65,4 +71,5 @@ for d in initialData:
 		l=len(encoded)
 		memory[pointer:pointer+l]=encoded
 		pointer+=l
+	vars[d[0]]= pointer
 

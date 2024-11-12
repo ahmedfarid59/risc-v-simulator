@@ -14,7 +14,8 @@ supportedInstructions=[
 	'SLLI', 'SLT', 'SLTI',
 	'SLTIU', 'SLTU', 'SRA',
 	'SRAI', 'SRL', 'SRLI',
-	'SUB', 'SW', 'XOR', 'XORI']
+	'SUB', 'SW', 'XOR',
+      'XORI', 'LA']
 
 #dictionary holds the registers alternative names and their x names
 regsNames= {

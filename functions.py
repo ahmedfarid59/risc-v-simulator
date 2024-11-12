@@ -2,8 +2,10 @@ from parse import *
 from registers import registers
 
 regs = registers()
-
 pc=0
+
+def trial():
+	print("hello world")
 
 def ADD(rd, rs1, rs2):
 	regs[rd] = regs[rs1] + regs[rs2]
@@ -57,10 +59,10 @@ def SLTU(rd, rs1, rs2):
 	regs[rd] = int(regs[rs1] < regs[rs2])
 
 def SLTI(rd, rs1, imm):
-	regs[rd] = int(regs[rs1] < (imm & 0xfff))
+	regs[rd] = int(regs[rs1] < (int(imm) & 0xfff))
 
 def SLTIU(rd, rs1, imm):
-	regs[rd] = int((regs[rs1] & 0xFFFFFFFF) < (imm & 0xFFFFFFFF))
+	regs[rd] = int((regs[rs1] & 0xFFFFFFFF) < (int(imm) & 0xFFFFFFFF))
 
 def BEQ(rs1, rs2, label):
 	if regs[rs1] == regs[rs2]:
@@ -68,7 +70,7 @@ def BEQ(rs1, rs2, label):
 
 def BNE(rs1, rs2, label):
 	if regs[rs1] != regs[rs2]:
-		pc[label]
+		pc=labels[label]
 
 def BLT(rs1, rs2, label):
 	if regs[rs1] < regs[rs2]:
@@ -88,7 +90,7 @@ def BGEU(rs1, rs2, label):
 
 # Load Instructions
 def LB(rd, offset, rs1):
-	addr = regs[rs1] + offset
+	addr = regs[rs1] + int(offset)
 	regs[rd] = int.from_bytes(memory[addr],byteorder='big',signed=True)
 
 def LH(rd, offset, rs1):
@@ -96,7 +98,7 @@ def LH(rd, offset, rs1):
 	regs[rd] = int.from_bytes(memory[addr:addr+2],byteorder='big',signed=True)
 
 def LW(rd, offset, rs1):
-	addr = regs[rs1] + offset
+	addr = regs[rs1] + int(offset)	
 	regs[rd] = int.from_bytes(memory[addr:addr+4] , byteorder='big',signed=True)
 
 def LBU(rd, offset, rs1):
@@ -123,7 +125,7 @@ def SH(rs2, offset, rs1):
 	memory[addr:addr+2] = (regs[rs2] & 0xffff).to_bytes(2,byteorder='big')
 
 def SW(rs2, offset, rs1):
-	addr = regs[rs1] +offset
+	addr = regs[rs1] +int(offset)
 	memory[addr:addr+4] = (regs[rs2] & 0xffffffff).to_bytes(4,byteorder='big')
 
 #jump instructions
@@ -132,7 +134,7 @@ def JAL(rd, label):
 	pc=labels[label]
 
 def JALR(rd, offset, rs1):
-	regs[rd] =pc
+	regs[rd] =pc-1
 	pc=regs[rs1] + offset
 
 def MUL(rd, rs1, rs2):
@@ -161,3 +163,6 @@ def J(label):
 
 def RET():
 	pc=regs['x1']
+
+def LA(rd,var):
+	regs[rd] = vars[var]
