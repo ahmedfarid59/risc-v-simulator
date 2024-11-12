@@ -1,19 +1,20 @@
-#the list of instructions names
-supportedInstructions= [
-	# R-type Instructions
-	"add", "sub", "sll", "slt", "sltu", "xor", "srl", "sra", "or", "and",
-	# I-type Instructions
-	"addi", "slti", "sltiu", "xori", "ori", "andi", "slli", "srli", "srai",
-	"lb", "lh", "lw", "lbu", "lhu", "jalr",
-	# S-type Instructions
-	"sb", "sh", "sw",
-	# B-type Instructions
-	"beq", "bne", "blt", "bge", "bltu", "bgeu",
-	# U-type Instructions
-	"lui", "auipc",
-	# J-type Instructions
-	"jal"
-]
+
+supportedInstructions=[
+	'ADD', 'ADDI', 'AND',
+	'ANDI', 'AUIPC', 'BEQ',
+	'BGE', 'BGEU', 'BLT',
+	'BLTU', 'BNE', 'DIV',
+	  'J', 'JAL', 'JALR',
+	'LB', 'LBU', 'LH',
+	'LHU', 'LI', 'LUI',
+	'LW', 'MUL', 'MV',
+	'NEG', 'NOT', 'OR',
+	'ORI', 'REM', 'RET',
+	'SB', 'SH', 'SLL',
+	'SLLI', 'SLT', 'SLTI',
+	'SLTIU', 'SLTU', 'SRA',
+	'SRAI', 'SRL', 'SRLI',
+	'SUB', 'SW', 'XOR', 'XORI']
 
 #dictionary holds the registers alternative names and their x names
 regsNames= {
@@ -51,3 +52,5 @@ regsNames= {
 	"t5": "x30",
 	"t6": "x31"
 }
+
+holding=['ecall','ebreak','pause', 'fence', 'fence.tso']

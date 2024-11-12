@@ -1,160 +1,163 @@
-from parse import labels,instructions
+from parse import *
+from registers import registers
 
-registers = {i: 0 for i in range(32)}
-memory = {}
+regs = registers()
 
-def signage(value, bits):
-	if value & (1 << (bits - 1)):
-		return value | ~((1 << bits) - 1)
-	return value
+pc=0
 
-# Arithmetic and Logical Instructions
-def add(rd, rs1, rs2):
-	registers[rd] = registers[rs1] + registers[rs2]
+def ADD(rd, rs1, rs2):
+	regs[rd] = regs[rs1] + regs[rs2]
 
-def sub(rd, rs1, rs2):
-	registers[rd] = registers[rs1] - registers[rs2]
+def SUB(rd, rs1, rs2):
+	regs[rd] = regs[rs1] - regs[rs2]
 
-def addi(rd, rs1, imm):
-	registers[rd] = registers[rs1] + imm
+def ADDI(rd, rs1, imm):
+	regs[rd] = regs[rs1] + (imm & 0xfff)
 
-def andi(rd, rs1, imm):
-	registers[rd] = registers[rs1] & imm
+def AND(rd, rs1, rs2):
+	regs[rd] = regs[rs1] & regs[rs2]
 
-def ori(rd, rs1, imm):
-	registers[rd] = registers[rs1] | imm
+def ANDI(rd, rs1, imm):
+	regs[rd] = regs[rs1] & (imm &0xfff)
 
-def xori(rd, rs1, imm):
-	registers[rd] = registers[rs1] ^ imm
+def OR(rd, rs1, rs2):
+	regs[rd] = regs[rs1] | regs[rs2]
 
-def sll(rd, rs1, rs2):
-	registers[rd] = registers[rs1] << (registers[rs2] & 0x1F)
+def ORI(rd, rs1, imm):
+	regs[rd] = regs[rs1] | (imm&0xfff)
 
-	def srl(rd, rs1, rs2):
-		registers[rd] =() registers[rs1] & 0xFFFFFFFF) >> (registers[rs2] & 0x1F)
+def XOR(rd ,rs1 ,rs2):
+	regs[rd] = regs[rs1] ^ regs[rs2]
 
-def sra(rd, rs1, rs2):
-	registers[rd] = (registers[rs1] >> ((registers[rs2] % 32)+1))&(1<<31)
+def XORI(rd, rs1, imm):
+	regs[rd] = regs[rs1] ^ (imm&0xfff)
 
-def slli(rd, rs1, imm):
-	registers[rd] = registers[rs1] << imm
+def SLLI(rd, rs1, imm):
+	regs[rd] = regs[rs1] << (imm&0x1f)
 
-def srli(rd, rs1, imm):
-	registers[rd] = (registers[rs1] & 0xFFFFFFFF) >> shamt
+def SRLI(rd, rs1, imm):
+	regs[rd] = regs[rs1] >> (imm&0x1f)
 
-def srai(rd, rs1, shamt):
-	registers[rd] = registers[rs1] >> shamt
+def SLL(rd, rs1, rs2):
+	regs[rd] = regs[rs1] << (regs[rs2] & 0x1F)
 
-def lui(rd, imm):
-	registers[rd] = imm << 12
+def SRL(rd, rs1, rs2):
+	regs[rd] = ( regs[rs1] & 0xFFFFFFFF) >> (regs[rs2] & 0x1F)
 
-def auipc(rd, imm):
-	registers[rd] = imm << 12 + rd
+def SRA(rd, rs1, rs2):
+	regs[rd] = (regs[rs1] >> ((regs[rs2] % 32)+1))&(1<<31)
 
-# Comparison Instructions
-def slt(rd, rs1, rs2):
-	registers[rd] = int(registers[rs1] < registers[rs2])
+def SRAI(rd, rs1, imm):
+	regs[rd] =(( regs[rs1]&0x7fffffff) >> (imm&0x1f))&0x80000000
 
-def sltu(rd, rs1, rs2):
-	registers[rd] = int((registers[rs1] & 0xFFFFFFFF) < (registers[rs2] & 0xFFFFFFFF))
+def SLT(rd, rs1, rs2):
+	regs[rd] = int(regs[rs1] < regs[rs2])
 
-def slti(rd, rs1, imm):
-	registers[rd] = int(registers[rs1] < sign_extend(imm, 12))
+def SLTU(rd, rs1, rs2):
+	regs[rd] = int(regs[rs1] < regs[rs2])
 
-def sltiu(rd, rs1, imm):
-	registers[rd] = int((registers[rs1] & 0xFFFFFFFF) < (sign_extend(imm, 12) & 0xFFFFFFFF))
+def SLTI(rd, rs1, imm):
+	regs[rd] = int(regs[rs1] < (imm & 0xfff))
 
-# Branch Instructions
-def beq(rs1, rs2, label):
-	if registers[rs1] == registers[rs2]:
-		return label
+def SLTIU(rd, rs1, imm):
+	regs[rd] = int((regs[rs1] & 0xFFFFFFFF) < (imm & 0xFFFFFFFF))
 
-def bne(rs1, rs2, label):
-	if registers[rs1] != registers[rs2]:
-		return label
+def BEQ(rs1, rs2, label):
+	if regs[rs1] == regs[rs2]:
+		pc=labels[label]
 
-def blt(rs1, rs2, label):
-	if registers[rs1] < registers[rs2]:
-		return label
+def BNE(rs1, rs2, label):
+	if regs[rs1] != regs[rs2]:
+		pc[label]
 
-def bge(rs1, rs2, label):
-	if registers[rs1] >= registers[rs2]:
-		return label
+def BLT(rs1, rs2, label):
+	if regs[rs1] < regs[rs2]:
+		pc=labels[label]
 
-def bltu(rs1, rs2, label):
-	if (registers[rs1] & 0xFFFFFFFF) < (registers[rs2] & 0xFFFFFFFF):
-		return label
+def BGE(rs1, rs2, label):
+	if regs[rs1] >= regs[rs2]:
+		pc=labels[label]
 
-def bgeu(rs1, rs2, label):
-	if (registers[rs1] & 0xFFFFFFFF) >= (registers[rs2] & 0xFFFFFFFF):
-		return label
+def BLTU(rs1, rs2, label):
+	if regs[rs1]  < regs[rs2] :
+		pc=labels[label]
+
+def BGEU(rs1, rs2, label):
+	if regs[rs1] >= regs[rs2]:
+		pc=labels[label]
 
 # Load Instructions
-def lb(rd, offset, rs1):
-	addr = registers[rs1] + sign_extend(offset, 12)
-	registers[rd] = sign_extend(memory.get(addr, 0), 8)
+def LB(rd, offset, rs1):
+	addr = regs[rs1] + offset
+	regs[rd] = int.from_bytes(memory[addr],byteorder='big',signed=True)
 
-def lh(rd, offset, rs1):
-	addr = registers[rs1] + sign_extend(offset, 12)
-	registers[rd] = sign_extend((memory.get(addr, 0) | (memory.get(addr + 1, 0) << 8)), 16)
+def LH(rd, offset, rs1):
+	addr = regs[rs1] + offset
+	regs[rd] = int.from_bytes(memory[addr:addr+2],byteorder='big',signed=True)
 
-def lw(rd, offset, rs1):
-	addr = registers[rs1] + sign_extend(offset, 12)
-	registers[rd] = memory.get(addr, 0) | (memory.get(addr + 1, 0) << 8) | \
-					(memory.get(addr + 2, 0) << 16) | (memory.get(addr + 3, 0) << 24)
+def LW(rd, offset, rs1):
+	addr = regs[rs1] + offset
+	regs[rd] = int.from_bytes(memory[addr:addr+4] , byteorder='big',signed=True)
 
-def lbu(rd, offset, rs1):
-	addr = registers[rs1] + sign_extend(offset, 12)
-	registers[rd] = memory.get(addr, 0) & 0xFF
+def LBU(rd, offset, rs1):
+	addr = regs[rs1] + offset
+	regs[rd] = int.from_bytes(memory[addr], byteorder='big')
 
-def lhu(rd, offset, rs1):
-	addr = registers[rs1] + sign_extend(offset, 12)
-	registers[rd] = (memory.get(addr, 0) | (memory.get(addr + 1, 0) << 8)) & 0xFFFF
+def LHU(rd, offset, rs1):
+	addr = regs[rs1] +offset
+	regs[rd] = int.from_bytes(memory[addr:addr+2], byteorder='big')
+
+def AUIPC(rd, imm):
+	regs[rd] = imm << 12 + rd
+
+def LUI(rd, imm):
+	regs[rd] = imm << 12
 
 # Store Instructions
-def sb(rs2, offset, rs1):
-	addr = registers[rs1] + sign_extend(offset, 12)
-	memory[addr] = registers[rs2] & 0xFF
+def SB(rs2, offset, rs1):
+	addr = regs[rs1] + offset
+	memory[addr] = (regs[rs2] & 0xff).to_bytes(1,byteorder='big')
 
-def sh(rs2, offset, rs1):
-	addr = registers[rs1] + sign_extend(offset, 12)
-	memory[addr] = registers[rs2] & 0xFF
-	memory[addr + 1] = (registers[rs2] >> 8) & 0xFF
+def SH(rs2, offset, rs1):
+	addr = regs[rs1] +offset
+	memory[addr:addr+2] = (regs[rs2] & 0xffff).to_bytes(2,byteorder='big')
 
-def sw(rs2, offset, rs1):
-	addr = registers[rs1] + sign_extend(offset, 12)
-	memory[addr] = registers[rs2] & 0xFF
-	memory[addr + 1] = (registers[rs2] >> 8) & 0xFF
-	memory[addr + 2] = (registers[rs2] >> 16) & 0xFF
-	memory[addr + 3] = (registers[rs2] >> 24) & 0xFF
+def SW(rs2, offset, rs1):
+	addr = regs[rs1] +offset
+	memory[addr:addr+4] = (regs[rs2] & 0xffffffff).to_bytes(4,byteorder='big')
 
-# Jump and Link Instructions
-def jal(rd, label):
-	registers[rd] = label
+#jump instructions
+def JAL(rd, label):
+	regs[rd] = pc
+	pc=labels[label]
 
-def jalr(rd, rs1, offset):
-	registers[rd] = registers[rs1] + sign_extend(offset, 12)
+def JALR(rd, offset, rs1):
+	regs[rd] =pc
+	pc=regs[rs1] + offset
 
-# Environment Call and Breakpoint
-def ecall():
-	print("Environment call")
+def MUL(rd, rs1, rs2):
+	regs[rd] = regs[rs1] * regs[rs2]
 
-def ebreak():
-	print("Breakpoint")
+def DIV(rd, rs1, rs2):
+	regs[rd] = regs[rs1] // regs[rs2] if regs[rs2] != 0 else 0
 
-# FENCE Instructions
-def fence(pred, succ):
-	pass  # Normally affects memory ordering; not simulated here
+def REM(rd, rs1, rs2):
+	regs[rd] = regs[rs1] % regs[rs2] if regs[rs2] != 0 else 0
 
-def fence_i():
-	pass  # Normally clears instruction cache
+def MV(rd ,rs):
+	regs[rd] = regs[rs]
 
-def mul(rd, rs1, rs2):
-	registers[rd] = registers[rs1] * registers[rs2]
+def NOT(rd ,rs):
+	regs[rd] = ~regs[rs]
 
-def div(rd, rs1, rs2):
-	registers[rd] = registers[rs1] // registers[rs2] if registers[rs2] != 0 else 0
+def NEG(rd ,rs):
+	regs[rd] = regs[rs] *-1
 
-def rem(rd, rs1, rs2):
-	registers[rd] = registers[rs1] % registers[rs2] if registers[rs2] != 0 else 0
+def LI(rd ,imm):
+	regs[rd] = imm
 
+def J(label):
+	pc=labels[label]
+
+def RET():
+	pc=regs['x1']
