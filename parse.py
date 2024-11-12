@@ -1,22 +1,33 @@
+import os
 from constents import supportedInstructions
-import re
 
-file=open("test1.s")
-code=file.read().lower()
-file.close()
+import re
+#fileName=input("enter the risc-v file name")
+#while not  os.path.exists(fileName):
+	#print("file do not exist!")
+	#fileName=input("enter the risc-v file name")
+
+file=open("test1.s")#openning the file
+code=file.read().lower()#getting the content of the file and converting it to lower case
+file.close()#closing the file
 
 code=re.sub(r"\s*#.*",'',code)#removing comments
 code=re.sub(r"\s*,\s*",",",code)
 code=re.sub(r"\s*(\n\s*)+","\n",code)#removing empty lines and those who are just set of spaces and the trilling extra spaces
 code=re.sub(r"\s{2,}",' ',code)#removing extra spaces between words
-instructionsText= re.search(r"_start\s*:\s([-\w\s,:()]+)\.?",code)
-instructionsList=instructionsText.group().splitlines()
-labels={}
 
-for i, inst in enumerate(instructionsList):
+#getting the instructions part of the code starting from the start label til the end of the file
+instructionsText= re.search(r"_start\s*:\s([-\w\s,:()]+)\.?",code)
+instructionsCode=instructionsText.group().splitlines()
+
+labels={} #dictianary holds the labels and their indexes
+instructions=[]
+
+for i, inst in enumerate(instructionsCode):
 	if inst.endswith(":") :
 		labels[inst]=i+1
 	else:
 		if inst in supportedInstructions:
 			tokens=re.split(r"(?:\s|,)+",inst)
-			instructionsList[i]=tokens
+			instructions.append(tokens)
+print("success")
