@@ -6,7 +6,7 @@ pc = 0
 
 def sign_extend(value, bits):
     sign_bit = 1 << (bits - 1)  
-    return (value & (sign_bit - 1)) - (value & sign_bit)
+    return (int(value) & (sign_bit - 1)) - (int(value) & sign_bit)
 
 def ADD(rd, rs1, rs2):
     regs[rd] = regs[rs1] + regs[rs2]

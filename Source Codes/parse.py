@@ -8,7 +8,8 @@ vars={}
 memory=bytearray(128)
 pointer=0
 
-fileName = "../Tests/" + input("enter the risc-v file name (including file extension)")
+#fileName = "../Tests/" + input("enter the risc-v file name (including file extension)")
+fileName="test1.s"
 while not  os.path.exists(fileName):
 	print("file do not exist!")
 	fileName="../Tests/" + input("enter the risc-v file name (including file extension)")
