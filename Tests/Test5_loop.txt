@@ -1,0 +1,23 @@
+  .text
+  .global _start
+
+_start:
+  # Initialize registers
+  ADDI x1, x0, 10        # x1 = 10 (start value for loop counter)
+  ADDI x2, x0, 0         # x2 = 0  (accumulator for sum)
+  
+loop:
+  ADD x2, x2, x1         # x2 = x2 + x1 (accumulate the value of x1 into x2)
+  SUBI x1, x1, 1         # x1 = x1 - 1 (decrement loop counter)
+  
+  BNE x1, x0, loop       # Branch to 'loop' if x1 != 0 (loop continues until x1 == 0)
+
+  # At this point, the loop has finished, and the sum is stored in x2
+  # The final value of x2 will be the sum of the numbers from 10 down to 1
+  # That is, x2 = 10 + 9 + 8 + ... + 1 = 55
+
+  # Trigger an EBREAK to end the program (for debugging)
+  EBREAK
+
+  # End of Test Case
+  .end
