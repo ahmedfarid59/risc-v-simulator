@@ -1,0 +1,15 @@
+Mon, Oct 25:
+First meeting and initial commit to discuss and understand the different roles. We broke down the tasks and assigned roles to each team member.
+
+Wed, Nov 6:
+Implemented a function using a case statement to handle all 42 instructions. The function is named execute, and when called, it receives parameters. The parameters are unified and in R-format, which is generic and can be adapted for other formats.
+
+Thurs, Nov 7:
+Had a quick discussion with the team on their implementation of the registers and memory  and decided to break the functionality into 42 individual functions (plus the pseudo-instructions and halting function). Each function is small and has its own required parameters. This modification was made to ensure our design is compatible and modular.
+
+
+Tue, Nov 12: 
+Implemented short assembly testcases. I chose to build 13 short ones. each is no more than 5 to 7 insttructions and has one or 3 halting instructions. the 13 testcases shold cover the 42. Some of them have loops. 
+
+Wed, Nov 13: 
+Worked on the user guide and I added the list of programms in the report. 
