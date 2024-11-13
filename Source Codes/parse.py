@@ -8,11 +8,10 @@ vars={}
 memory=bytearray(128)
 pointer=0
 
-#fileName = "../Tests/" + input("enter the risc-v file name (including file extension)")
-fileName="Tests/Test_4_Branch&JumpOperations_FENCE.txt"
-#while not  os.path.exists(fileName):
-	#print("file do not exist!")
-	#fileName="../Tests/" + input("enter the risc-v file name (including file extension)")
+fileName = "../Tests/" + input("enter the risc-v file name (including file extension)")
+while not  os.path.exists(fileName):
+	print("file do not exist!")
+	fileName="../Tests/" + input("enter the risc-v file name (including file extension)")
 
 file=open(fileName)#openning the file
 code=file.read().lower()#getting the content of the file and converting it to lower case
