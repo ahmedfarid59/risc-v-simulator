@@ -4,8 +4,6 @@ from registers import registers
 regs = registers()
 pc=0
 
-def trial():
-	print("hello world")
 
 def ADD(rd, rs1, rs2):
 	regs[rd] = regs[rs1] + regs[rs2]

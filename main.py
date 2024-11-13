@@ -9,5 +9,6 @@ while pc < len(instructionsList):
 	elif ins[0] in holding:
 		break
 	print(" \t ".join(ins))
+	print(*[byte for byte in memory if byte != 0], sep='\t')
 	print(regs)
 	pc+=1

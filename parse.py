@@ -5,10 +5,10 @@ import re
 labels={} #dictianary holds the labels and their indexes
 instructionsList=[]
 vars={}
-memory=bytearray(1048576)
+memory=bytearray(128)
 pointer=0
 
-fileName=input("enter the risc-v file name")
+fileName="test1.s"#input("enter the risc-v file name")
 while not  os.path.exists(fileName):
 	print("file do not exist!")
 	fileName=input("enter the risc-v file name")
