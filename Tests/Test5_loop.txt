@@ -1,6 +1,4 @@
   .text
-  .global _start
-
 _start:
   # Initialize registers
   ADDI x1, x0, 10        # x1 = 10 (start value for loop counter)

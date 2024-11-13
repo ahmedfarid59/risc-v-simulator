@@ -9,10 +9,10 @@ memory=bytearray(128)
 pointer=0
 
 #fileName = "../Tests/" + input("enter the risc-v file name (including file extension)")
-fileName="test1.s"
-while not  os.path.exists(fileName):
-	print("file do not exist!")
-	fileName="../Tests/" + input("enter the risc-v file name (including file extension)")
+fileName="Tests/Test_4_Branch&JumpOperations_FENCE.txt"
+#while not  os.path.exists(fileName):
+	#print("file do not exist!")
+	#fileName="../Tests/" + input("enter the risc-v file name (including file extension)")
 
 file=open(fileName)#openning the file
 code=file.read().lower()#getting the content of the file and converting it to lower case
@@ -41,11 +41,11 @@ for i, inst in enumerate(textSection):
 	elif inst in holding:
 		instructionsList.append(inst)
 
-dataSection= re.search(r'\.DATA\s*([^\s]+(?:\s+[^\s]+)*)\s*(?=\n\s*\.TEXT)', code)
+dataSection= re.search(r'\.DATA\s*([^\s]+(?:\s+[^\s]+)*)\s*(?=\n\s*\.TEXT)',code)
 if dataSection is not None:
 	data=dataSection.group(1)
 
-	initialData=re.findall(r'(\w+)\s*:\s*\.(WORD|ASCII|ASCIZ|HALF|BYTE|DWORD)\s*([^\s]+)',dataSection)
+	initialData=re.findall(r'(\w+)\s*:\s*\.(WORD|ASCII|ASCIZ|HALF|BYTE|DWORD)\s*([^\s]+)',data)
 	for d in initialData:
 		if d[1] =="WORD":
 			value=d[2].split(',')
