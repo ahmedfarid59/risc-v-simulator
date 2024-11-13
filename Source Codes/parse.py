@@ -41,36 +41,39 @@ for i, inst in enumerate(textSection):
 	elif inst in holding:
 		instructionsList.append(inst)
 
-dataSection= re.search(r'\.DATA\s*([^\s]+(?:\s+[^\s]+)*)\s*(?=\n\s*\.TEXT)', code).group(1)
-initialData=re.findall(r'(\w+)\s*:\s*\.(WORD|ASCII|ASCIZ|HALF|BYTE|DWORD)\s*([^\s]+)',dataSection)
-for d in initialData:
-	if d[1] =="WORD":
-		value=d[2].split(',')
-		if len(value)==1:
-			memory[pointer:pointer+4]=int(d[2]).to_bytes(4,byteorder='big')
-			pointer+=4
-		else:
-			for v in value:
-				memory[pointer:pointer+4]=int(v).to_bytes(4,byteorder='big')
+dataSection= re.search(r'\.DATA\s*([^\s]+(?:\s+[^\s]+)*)\s*(?=\n\s*\.TEXT)', code)
+if dataSection is not None:
+	data=dataSection.group(1)
+
+	initialData=re.findall(r'(\w+)\s*:\s*\.(WORD|ASCII|ASCIZ|HALF|BYTE|DWORD)\s*([^\s]+)',dataSection)
+	for d in initialData:
+		if d[1] =="WORD":
+			value=d[2].split(',')
+			if len(value)==1:
+				memory[pointer:pointer+4]=int(d[2]).to_bytes(4,byteorder='big')
 				pointer+=4
-	elif d[1] =="HALF":
-		memory[pointer:pointer+2]=int(d[2]).to_bytes(2,byteorder='big')
-		pointer+=2
-	elif d[1] == "BYTE":
-		memory[pointer] = int(d[2]).to_bytes(1,byteorder='big')
-		pointer+=1
-	elif d[1] == "DWORD":
-		memory[pointer:pointer+8]=int(d[2]).to_bytes(8,byteorder='big')
-		pointer+=8
-	elif d[1] == "ASCII":
-		l=len(d[2])
-		encoded=d[2].encode('utf-8')
-		memory[pointer:pointer+l]=encoded
-		pointer+=l
-	elif d[1] == "ASCIZ":
-		encoded=d[2][1:-1].encode('utf-8')+b'\0'
-		l=len(encoded)
-		memory[pointer:pointer+l]=encoded
-		pointer+=l
-	vars[d[0]]= pointer
+			else:
+				for v in value:
+					memory[pointer:pointer+4]=int(v).to_bytes(4,byteorder='big')
+					pointer+=4
+		elif d[1] =="HALF":
+			memory[pointer:pointer+2]=int(d[2]).to_bytes(2,byteorder='big')
+			pointer+=2
+		elif d[1] == "BYTE":
+			memory[pointer] = int(d[2]).to_bytes(1,byteorder='big')
+			pointer+=1
+		elif d[1] == "DWORD":
+			memory[pointer:pointer+8]=int(d[2]).to_bytes(8,byteorder='big')
+			pointer+=8
+		elif d[1] == "ASCII":
+			l=len(d[2])
+			encoded=d[2].encode('utf-8')
+			memory[pointer:pointer+l]=encoded
+			pointer+=l
+		elif d[1] == "ASCIZ":
+			encoded=d[2][1:-1].encode('utf-8')+b'\0'
+			l=len(encoded)
+			memory[pointer:pointer+l]=encoded
+			pointer+=l
+		vars[d[0]]= pointer
 
