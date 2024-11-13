@@ -8,12 +8,12 @@ vars={}
 memory=bytearray(1048576)
 pointer=0
 
-#fileName=input("enter the risc-v file name")
-#while not  os.path.exists(fileName):
-	#print("file do not exist!")
-		#fileName=input("enter the risc-v file name")
+fileName=input("enter the risc-v file name")
+while not  os.path.exists(fileName):
+	print("file do not exist!")
+	fileName=input("enter the risc-v file name")
 
-file=open("test1.s")#openning the file
+file=open(fileName)#openning the file
 code=file.read().lower()#getting the content of the file and converting it to lower case
 file.close()#closing the file
 #removing comments
