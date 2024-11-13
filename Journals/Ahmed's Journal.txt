@@ -1,0 +1,10 @@
+Oct 25: Initial Commit and first meeting for discussing the project.
+
+Nov 4: constants file, reading the input in data structure.
+
+Nov 12: edited Reem's functions file to align with the rest of the code , added the pseudo instructions, parsed the data and inserted them to the memory.
+Worked on Main function.
+
+Nov13:
+Removed extra files that were for testing purposes.
+Added Input functionality for choosing which testcase to run.

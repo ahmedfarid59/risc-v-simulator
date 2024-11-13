@@ -1,0 +1,5 @@
+Oct 25: Initial Commit and first meeting for discussing the project.
+
+Nov 10: Added the registers file. This file includes a class that manages all registers, initializing them to zero and providing case-insensitive access using mappings from constents.regsNames. The class includes protections for register `X0` to remain zero, 32-bit value enforcement on writes, and formatted string output for easy display of register states in decimal, hexadecimal, and binary formats. 
+
+Nov 13: Written the report, Organized files into corresponding folders as required in the project's pdf, and modified Ahmed's input functionality to read the proper paths after organizing the source codes and testcases in different folders.
